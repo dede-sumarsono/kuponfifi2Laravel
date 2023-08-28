@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\CuponuseController;
 use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -15,3 +16,8 @@ Route::post('/qrdelete/{qr}',[PostController::class,'destroy']);
 Route::get('/getallsantri',[AuthenticationController::class,'getallsantri']);
 Route::post('/register',[AuthenticationController::class,'register']);
 Route::post('/deleteuser/{id}',[AuthenticationController::class,'deleteuser']);
+
+
+Route::get('/cuponuses',[CuponuseController::class,'index']);
+Route::get('/cuponuses/{id}',[CuponuseController::class,'show']);
+Route::post('/cuponuses',[CuponuseController::class,'store']);

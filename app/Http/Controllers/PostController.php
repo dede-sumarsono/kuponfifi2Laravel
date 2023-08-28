@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cuponuse;
 use App\Models\Post;
 use App\Models\User;
 use Carbon\Carbon;
@@ -46,13 +47,24 @@ class PostController extends Controller
 
 
     // Scan code dan hapus
-    function destroy($qr) {
+    function destroy($qr, Request $request) {
         //$post = Post::findOrFail($qr);
         $post = Post::where('qr_code', $qr)->first();
+        
+        //return response()->json( ['data' => 'QR Diterima Dan Berhasil dihanguskan']);
+        
+        $request['user_id'] = $post['user_id'];
+        $request['name'] = $post['name'];
+        $request['asrama'] = $post['asrama'];
+        $request['qr_code'] = $post['qr_code'];
+        $request['sesi']=$post['sesi'];
+        
+        $cuponuse = Cuponuse::create($request->all());
         $post->delete();
 
-        return response()->json( ['data' => 'QR Diterima Dan Berhasil dihanguskan']);
-        //return new PostDetailResource($post->loadMissing('writer:id,email,username,notelepon,level'));
+
+
+        return response()->json(['data' => $post]);
 
 
     }
@@ -86,12 +98,22 @@ class PostController extends Controller
 
             for ($o=0; $o < 2; $o++) {
 
-            $random = $this->generateRandomString();
-            $request['user_id'] = $userall[$i]['id'];        
-            $request['name'] = $user->name;       
-            $request['asrama'] = $user->asrama;
-            $request['qr_code'] = $random;
-            $post = Post::create($request->all());
+                $random = $this->generateRandomString();
+                $request['user_id'] = $userall[$i]['id'];        
+                $request['name'] = $user->name;       
+                $request['asrama'] = $user->asrama;
+                $request['qr_code'] = $random;
+                $request['sesi'] = 'siang';
+
+
+                if ($o == 0) {
+                    $request['sesi'] = 'pagi';
+                }else{
+                    $request['sesi'] = 'siang';
+                }
+
+            
+                $post = Post::create($request->all());
             
             }
 
